@@ -3,6 +3,8 @@
 # Keeps standard region consistency, and adds a soft boundary consistency term
 # from adjacent teacher-probability change, dilated to a +/- band.
 
+# Implemented by: https://github.com/JoeScharpf
+
 from __future__ import annotations
 
 import math

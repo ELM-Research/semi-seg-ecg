@@ -1,8 +1,10 @@
-from typing import Callable, List, Sequence
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from typing import Callable, Sequence
+
+# Implemented by: https://github.com/JoeScharpf
 
 
 class _DoubleConv(nn.Module):
