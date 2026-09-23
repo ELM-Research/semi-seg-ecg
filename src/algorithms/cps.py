@@ -112,7 +112,7 @@ def train_one_epoch(
         ):
             model.train()
 
-            with torch.cuda.amp.autocast(enabled=use_amp):
+            with torch.amp.autocast("cuda", enabled=use_amp):
                 outputs = model(
                     torch.cat((ecg_x, ecg_u_w)),
                     return_loss=False,

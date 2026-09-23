@@ -119,7 +119,7 @@ def train_one_epoch(
         inputs = samples['ecg'].to(device, non_blocking=True)
         labels = samples['target'].to(device, non_blocking=True)
 
-        with torch.cuda.amp.autocast(enabled=use_amp):
+        with torch.amp.autocast("cuda", enabled=use_amp):
             results = model(inputs, labels, return_loss=True)
         loss = results.get('loss')
         if 'loss_aux' in results:
@@ -199,7 +199,7 @@ def evaluate(
         inputs = samples['ecg'].to(device, non_blocking=True)
         labels = samples['target'].to(device, non_blocking=True)
 
-        with torch.cuda.amp.autocast(enabled=use_amp):
+        with torch.amp.autocast("cuda", enabled=use_amp):
             results = model(inputs, labels, return_loss=True)
         loss = results.get('loss').item()
         logits = results['seg_logits']

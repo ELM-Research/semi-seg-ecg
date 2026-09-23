@@ -113,7 +113,7 @@ def inference(config):
         inputs = samples['ecg'].to(device, non_blocking=True)
 
         with torch.no_grad():
-            with torch.cuda.amp.autocast(enabled=use_amp):
+            with torch.amp.autocast("cuda", enabled=use_amp):
                 results = model(inputs, return_loss=False)
         outputs = torch.softmax(results['seg_logits'], dim=1)
         outputs_total.append(outputs.cpu())
