@@ -123,7 +123,7 @@ test:
   target_metric: MeanIoU
 
 ddp:
-  world_size: 1
+  world_size: 1  # Number of GPUs when the launcher uses distributed mode.
   rank: -1
   gpu: 0
   dist_url: env://

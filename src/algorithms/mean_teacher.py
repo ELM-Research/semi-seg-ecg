@@ -282,13 +282,6 @@ def train(config):
     model_teacher.to(device)
     for p in model_teacher.parameters():
         p.requires_grad = False
-    with torch.no_grad():
-        for param_q, param_k in zip(
-            model_without_ddp.parameters(),
-            model_teacher.parameters(),
-        ):
-            param_k.data = param_q.data
-    model_teacher_without_ddp = model_teacher
 
     eff_batch_size = config['dataloader']['batch_size']
     eff_batch_size *= config['train']['accum_iter']
@@ -312,11 +305,10 @@ def train(config):
             device_ids=[config['ddp']['gpu']],
         )
         model_without_ddp = model.module
-        model_teacher = torch.nn.parallel.DistributedDataParallel(
-            model_teacher,
-            device_ids=[config['ddp']['gpu']],
-        )
-        model_teacher_without_ddp = model_teacher.module
+
+    # Copy after DDP synchronizes the student; the frozen teacher needs no DDP.
+    model_teacher.load_state_dict(model_without_ddp.state_dict())
+    model_teacher_without_ddp = model_teacher
 
     layer_decay = config['train'].get('layer_decay', None)
     if layer_decay:

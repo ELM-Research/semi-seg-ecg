@@ -84,7 +84,9 @@ if __name__ == "__main__":
     else:
         raise ValueError(f"Invalid algorithm: {algo_name}")
     algo.train(config)
-    if config.get('test', False) and is_main_process():
-        if config['ddp']['distributed']:
-            torch.distributed.destroy_process_group()
+    main_process = is_main_process()
+    if config['ddp']['distributed']:
+        torch.distributed.barrier()
+        torch.distributed.destroy_process_group()
+    if config.get('test', False) and main_process:
         algo.test(config)
